@@ -1,0 +1,398 @@
+<div id="seasonal-compass-quiz">
+  <style>
+    #seasonal-compass-quiz {
+      --sc-spring: #A3C585;
+      --sc-summer: #E8A93B;
+      --sc-autumn: #D98C4A;
+      --sc-winter: #8FB3D9;
+      --sc-bg: #515839;
+      --sc-surface: #5E6642;
+      --sc-border: #6E7650;
+      --sc-header: #C99939;
+      --sc-text: #FFFFFF;
+      --sc-text-muted: #D8D8CC;
+      --sc-accent: #C99939;
+      --sc-radius: 16px;
+      --sc-shadow: 0 4px 20px rgba(0,0,0,0.18);
+
+      max-width: 560px;
+      margin: 0 auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: var(--sc-text);
+      background: var(--sc-bg);
+      border-radius: var(--sc-radius);
+      box-shadow: var(--sc-shadow);
+      padding: 32px 28px;
+      box-sizing: border-box;
+    }
+    #seasonal-compass-quiz * { box-sizing: border-box; }
+
+    .sc-progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--sc-border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .sc-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sc-spring), var(--sc-summer), var(--sc-autumn), var(--sc-winter));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .sc-question-count {
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--sc-header);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .sc-question-text {
+      font-size: 21px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: var(--sc-header);
+      margin: 0 0 20px 0;
+    }
+
+    .sc-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sc-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--sc-surface);
+      border: 1.5px solid var(--sc-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 15.5px;
+      line-height: 1.45;
+      color: var(--sc-text);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+      font-family: inherit;
+    }
+    .sc-option:hover {
+      border-color: var(--sc-accent);
+      background: #666E48;
+    }
+    .sc-option:active { transform: scale(0.99); }
+
+    .sc-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .sc-back-btn {
+      background: none;
+      border: none;
+      color: var(--sc-text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 4px;
+      font-family: inherit;
+    }
+    .sc-back-btn:hover { color: var(--sc-text); }
+    .sc-back-btn:disabled { visibility: hidden; }
+
+    /* Results screen */
+    .sc-results { text-align: center; display: none; }
+    .sc-results-eyebrow {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--sc-header);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .sc-results-season {
+      font-size: 34px;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      color: var(--sc-header);
+    }
+    .sc-results-tag {
+      font-size: 15px;
+      color: var(--sc-text-muted);
+      margin-bottom: 22px;
+      font-style: italic;
+    }
+    .sc-results-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 18px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+    }
+    .sc-results-desc {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--sc-text);
+      background: var(--sc-surface);
+      border-radius: 12px;
+      padding: 20px 22px;
+      text-align: left;
+      margin-bottom: 24px;
+      border: 1px solid var(--sc-border);
+    }
+    .sc-restart-btn {
+      background: var(--sc-accent);
+      color: #2E2A1A;
+      border: none;
+      border-radius: 99px;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s ease;
+    }
+    .sc-restart-btn:hover { opacity: 0.88; }
+
+    .sc-scorebar-wrap { margin-top: 4px; margin-bottom: 26px; text-align: left; }
+    .sc-scorebar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .sc-scorebar-label { width: 60px; flex-shrink: 0; color: var(--sc-text-muted); font-weight: 600; }
+    .sc-scorebar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--sc-border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .sc-scorebar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; width: 0%; }
+
+    @media (max-width: 480px) {
+      #seasonal-compass-quiz { padding: 24px 18px; border-radius: 12px; }
+      .sc-question-text { font-size: 18px; }
+      .sc-results-season { font-size: 28px; }
+    }
+  </style>
+
+  <div id="sc-quiz-screen">
+    <div class="sc-progress-track">
+      <div class="sc-progress-fill" id="sc-progress-fill"></div>
+    </div>
+    <div class="sc-question-count" id="sc-question-count">Question 1 of 6</div>
+    <p class="sc-question-text" id="sc-question-text"></p>
+    <div class="sc-options" id="sc-options"></div>
+    <div class="sc-nav">
+      <button class="sc-back-btn" id="sc-back-btn">&larr; Back</button>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="sc-results" id="sc-results-screen">
+    <div class="sc-results-eyebrow">Your Seasonal Compass</div>
+    <div class="sc-results-icon" id="sc-results-icon"></div>
+    <h2 class="sc-results-season" id="sc-results-season"></h2>
+    <div class="sc-results-tag" id="sc-results-tag"></div>
+
+    <div class="sc-scorebar-wrap" id="sc-scorebar-wrap"></div>
+
+    <p class="sc-results-desc" id="sc-results-desc"></p>
+    <button class="sc-restart-btn" id="sc-restart-btn">Retake the Quiz</button>
+  </div>
+
+  <script>
+    (function() {
+      var questions = [
+        {
+          text: "How would you describe your current energy?",
+          options: [
+            { label: "Restless and shifting, like something new is stirring", season: "Spring" },
+            { label: "Bright and full, ready to show up and expand", season: "Summer" },
+            { label: "Reflective and ready to let go of what no longer serves", season: "Autumn" },
+            { label: "Low and needing deep rest and renewal", season: "Winter" }
+          ]
+        },
+        {
+          text: "On a scale of 1 to 5, how comfortable are you with uncertainty right now?",
+          options: [
+            { label: "I want clear answers and plans", season: "Winter" },
+            { label: "I'm uneasy but trying to be patient", season: "Autumn" },
+            { label: "I feel curious and open to possibilities", season: "Spring" },
+            { label: "I embrace uncertainty as part of growth", season: "Summer" }
+          ]
+        },
+        {
+          text: "Which feeling best describes your relationship with your body lately?",
+          options: [
+            { label: "Restless, like it's urging me to move or change", season: "Spring" },
+            { label: "Energized but sometimes stretched too thin", season: "Summer" },
+            { label: "Tense or heavy, signaling I need to release", season: "Autumn" },
+            { label: "Tired or depleted, craving stillness and care", season: "Winter" }
+          ]
+        },
+        {
+          text: "How do you feel about your current social connections?",
+          options: [
+            { label: "Craving deeper connection but hesitant to reach out", season: "Spring" },
+            { label: "Engaged but careful to protect my energy", season: "Summer" },
+            { label: "Reassessing relationships and setting boundaries", season: "Autumn" },
+            { label: "Seeking quiet support and space to heal", season: "Winter" }
+          ]
+        },
+        {
+          text: "What best describes your mindset about growth and change?",
+          options: [
+            { label: "Excited but uncertain about what's next", season: "Spring" },
+            { label: "Ready to lead and express myself fully", season: "Summer" },
+            { label: "Reflecting on what to release and realign", season: "Autumn" },
+            { label: "Focused on rest, recovery, and rebuilding", season: "Winter" }
+          ]
+        },
+        {
+          text: "Which statement resonates most with you?",
+          options: [
+            { label: "I'm stepping into new beginnings, even if it feels messy", season: "Spring" },
+            { label: "I'm balancing expansion with the need to protect myself", season: "Summer" },
+            { label: "I'm letting go of old patterns to prepare for what's next", season: "Autumn" },
+            { label: "I'm honoring my limits and embracing stillness", season: "Winter" }
+          ]
+        }
+      ];
+
+      var seasonInfo = {
+        Spring: {
+          icon: "🌱",
+          color: "var(--sc-spring)",
+          tag: "The Seed — new beginnings, curiosity, emergence",
+          desc: "You're in a Spring season. Something in you is stirring awake — new ideas, new curiosity, the first pull toward change. It may still feel uncertain or half-formed, and that's exactly as it should be. Spring doesn't ask you to have it figured out. It asks you to notice what's pushing toward the light and give it room to grow, one small step at a time."
+        },
+        Summer: {
+          icon: "☀️",
+          color: "var(--sc-summer)",
+          tag: "The Bloom — visibility, expression, full expansion",
+          desc: "You're in a Summer season. Your energy is bright, expressive, and ready to be seen. This is a time for showing up fully, sharing what you've been building, and stepping into your own visibility. Just remember: even the height of summer needs shade sometimes. Protect your energy while you shine."
+        },
+        Autumn: {
+          icon: "🍂",
+          color: "var(--sc-autumn)",
+          tag: "The Harvest — release, boundaries, discernment",
+          desc: "You're in an Autumn season. You're being called to sort through what's ready to be released — old patterns, relationships, or roles that no longer fit who you're becoming. The irritation or heaviness you may be feeling isn't a step backward. It's discernment, doing exactly what it's meant to do before the next cycle begins."
+        },
+        Winter: {
+          icon: "❄️",
+          color: "var(--sc-winter)",
+          tag: "The Stillness — rest, renewal, going inward",
+          desc: "You're in a Winter season. Your body and spirit are asking for rest, not more output. This isn't laziness or falling behind — it's the necessary dark that makes the next season of growth possible. Trust the stillness. What you need most right now is permission to be quiet and held."
+        }
+      };
+
+      var current = 0;
+      var answers = new Array(questions.length).fill(null);
+
+      var quizScreen = document.getElementById("sc-quiz-screen");
+      var resultsScreen = document.getElementById("sc-results-screen");
+      var progressFill = document.getElementById("sc-progress-fill");
+      var questionCount = document.getElementById("sc-question-count");
+      var questionText = document.getElementById("sc-question-text");
+      var optionsWrap = document.getElementById("sc-options");
+      var backBtn = document.getElementById("sc-back-btn");
+      var restartBtn = document.getElementById("sc-restart-btn");
+
+      function renderQuestion() {
+        var q = questions[current];
+        questionCount.textContent = "Question " + (current + 1) + " of " + questions.length;
+        questionText.textContent = q.text;
+        progressFill.style.width = (current / questions.length * 100) + "%";
+        backBtn.disabled = current === 0;
+
+        optionsWrap.innerHTML = "";
+        q.options.forEach(function(opt) {
+          var btn = document.createElement("button");
+          btn.className = "sc-option";
+          btn.textContent = opt.label;
+          btn.addEventListener("click", function() {
+            answers[current] = opt.season;
+            if (current < questions.length - 1) {
+              current++;
+              renderQuestion();
+            } else {
+              showResults();
+            }
+          });
+          optionsWrap.appendChild(btn);
+        });
+      }
+
+      backBtn.addEventListener("click", function() {
+        if (current > 0) {
+          current--;
+          renderQuestion();
+        }
+      });
+
+      function showResults() {
+        progressFill.style.width = "100%";
+
+        var tally = { Spring: 0, Summer: 0, Autumn: 0, Winter: 0 };
+        answers.forEach(function(s) { if (s) tally[s]++; });
+
+        var winner = "Spring";
+        var maxVal = -1;
+        Object.keys(tally).forEach(function(season) {
+          if (tally[season] > maxVal) {
+            maxVal = tally[season];
+            winner = season;
+          }
+        });
+
+        var info = seasonInfo[winner];
+        document.getElementById("sc-results-icon").textContent = info.icon;
+        document.getElementById("sc-results-icon").style.background = info.color;
+        document.getElementById("sc-results-season").textContent = winner;
+        document.getElementById("sc-results-tag").textContent = info.tag;
+        document.getElementById("sc-results-desc").textContent = info.desc;
+
+        var scorebarWrap = document.getElementById("sc-scorebar-wrap");
+        scorebarWrap.innerHTML = "";
+        Object.keys(tally).forEach(function(season) {
+          var row = document.createElement("div");
+          row.className = "sc-scorebar-row";
+          var pct = (tally[season] / questions.length) * 100;
+          row.innerHTML =
+            '<span class="sc-scorebar-label">' + season + '</span>' +
+            '<div class="sc-scorebar-track"><div class="sc-scorebar-fill" style="width:0%; background:' + seasonInfo[season].color + ';"></div></div>';
+          scorebarWrap.appendChild(row);
+          setTimeout((function(rowEl, width) {
+            return function() { rowEl.querySelector(".sc-scorebar-fill").style.width = width + "%"; };
+          })(row, pct), 50);
+        });
+
+        quizScreen.style.display = "none";
+        resultsScreen.style.display = "block";
+      }
+
+      restartBtn.addEventListener("click", function() {
+        current = 0;
+        answers = new Array(questions.length).fill(null);
+        resultsScreen.style.display = "none";
+        quizScreen.style.display = "block";
+        renderQuestion();
+      });
+
+      renderQuestion();
+    })();
+  </script>
+</div>
