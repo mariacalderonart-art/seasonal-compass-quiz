@@ -149,6 +149,12 @@
       margin-bottom: 24px;
       border: 1px solid var(--sc-border);
     }
+    .sc-results-desc p { margin: 0 0 14px 0; }
+    .sc-results-desc p:last-child { margin-bottom: 0; }
+    .sc-results-cta {
+      font-style: italic;
+      color: var(--sc-header) !important;
+    }
     .sc-restart-btn {
       background: var(--sc-accent);
       color: #2E2A1A;
@@ -209,7 +215,7 @@
 
     <div class="sc-scorebar-wrap" id="sc-scorebar-wrap"></div>
 
-    <p class="sc-results-desc" id="sc-results-desc"></p>
+    <div class="sc-results-desc" id="sc-results-desc"></div>
     <button class="sc-restart-btn" id="sc-restart-btn">Retake the Quiz</button>
   </div>
 
@@ -276,26 +282,30 @@
         Spring: {
           icon: "🌱",
           color: "var(--sc-spring)",
-          tag: "The Seed — new beginnings, curiosity, emergence",
-          desc: "You're in a Spring season. Something in you is stirring awake — new ideas, new curiosity, the first pull toward change. It may still feel uncertain or half-formed, and that's exactly as it should be. Spring doesn't ask you to have it figured out. It asks you to notice what's pushing toward the light and give it room to grow, one small step at a time."
+          tag: "Awakening & Emergence",
+          desc: "You're in Spring, a season of restless energy, new beginnings, and courageous uncertainty. This is a time of messy growth where you're learning to lean into discomfort and trust the unfolding process. Your journey invites you to honor your raw, imperfect emergence and to reach out for connection as you navigate this awakening.",
+          cta: "Explore your Spring Field Guide for practices, reflections, and community conversations designed to support your courageous growth."
         },
         Summer: {
           icon: "☀️",
           color: "var(--sc-summer)",
-          tag: "The Bloom — visibility, expression, full expansion",
-          desc: "You're in a Summer season. Your energy is bright, expressive, and ready to be seen. This is a time for showing up fully, sharing what you've been building, and stepping into your own visibility. Just remember: even the height of summer needs shade sometimes. Protect your energy while you shine."
+          tag: "Expansion & Power",
+          desc: "You're in Summer, a season of bold expression, fierce presence, and balancing your power with protection. You're called to show up fully, set boundaries, and engage deeply with your community. This season invites you to own your brilliance and rest when needed to sustain your flame.",
+          cta: "Dive into your Summer Field Guide for tools and reflections to help you navigate expansion without losing yourself."
         },
         Autumn: {
           icon: "🍂",
           color: "var(--sc-autumn)",
-          tag: "The Harvest — release, boundaries, discernment",
-          desc: "You're in an Autumn season. You're being called to sort through what's ready to be released — old patterns, relationships, or roles that no longer fit who you're becoming. The irritation or heaviness you may be feeling isn't a step backward. It's discernment, doing exactly what it's meant to do before the next cycle begins."
+          tag: "Realignment & Release",
+          desc: "You're in Autumn, a season of deep realignment, letting go, and rebuilding your foundation. You're invited to soften into change, release what no longer serves, and prepare for renewal. This season asks you to embrace tension with courage and lean into shared strength.",
+          cta: "Your Autumn Field Guide offers practices and reflections to support your fierce, tender realignment."
         },
         Winter: {
           icon: "❄️",
           color: "var(--sc-winter)",
-          tag: "The Stillness — rest, renewal, going inward",
-          desc: "You're in a Winter season. Your body and spirit are asking for rest, not more output. This isn't laziness or falling behind — it's the necessary dark that makes the next season of growth possible. Trust the stillness. What you need most right now is permission to be quiet and held."
+          tag: "Rest & Renewal",
+          desc: "You're in Winter, a season of profound rest, reflection, and gathering strength. You're called to honor your capacity, release burdens, and build resilience through surrender and support. This season invites you to slow down and trust the deep work of renewal.",
+          cta: "Explore your Winter Field Guide for grounding practices and reflections to help you live aligned with your true capacity."
         }
       };
 
@@ -363,7 +373,16 @@
         document.getElementById("sc-results-icon").style.background = info.color;
         document.getElementById("sc-results-season").textContent = winner;
         document.getElementById("sc-results-tag").textContent = info.tag;
-        document.getElementById("sc-results-desc").textContent = info.desc;
+
+        var descEl = document.getElementById("sc-results-desc");
+        descEl.innerHTML = "";
+        var mainP = document.createElement("p");
+        mainP.textContent = info.desc;
+        descEl.appendChild(mainP);
+        var ctaP = document.createElement("p");
+        ctaP.className = "sc-results-cta";
+        ctaP.textContent = info.cta;
+        descEl.appendChild(ctaP);
 
         var scorebarWrap = document.getElementById("sc-scorebar-wrap");
         scorebarWrap.innerHTML = "";
