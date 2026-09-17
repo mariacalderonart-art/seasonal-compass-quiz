@@ -23,7 +23,9 @@
       --sc-radius: 16px;
       --sc-shadow: 0 4px 20px rgba(0,0,0,0.18);
 
-      max-width: 560px;
+      width: 100%;
+      max-width: 400px;
+      height: 720px;
       margin: 0 auto;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       color: var(--sc-text);
@@ -32,14 +34,24 @@
       box-shadow: var(--sc-shadow);
       box-sizing: border-box;
       overflow: hidden;
+      position: relative;
     }
     #seasonal-compass-quiz * { box-sizing: border-box; }
 
-    .sc-screen { display: none; padding: 32px 28px; flex-direction: column; align-items: center; }
+    .sc-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      padding: 32px 28px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
     .sc-screen.sc-active { display: flex; }
 
     /* Landing screen */
-    #sc-landing-screen { text-align: center; padding-top: 40px; padding-bottom: 40px; }
+    #sc-landing-screen { text-align: center; justify-content: center; }
     .sc-logo {
       width: 100%;
       max-width: 460px;
@@ -87,7 +99,7 @@
     .sc-dot { width: 8px; height: 8px; border-radius: 50%; }
 
     /* Quiz screen */
-    #sc-quiz-screen { width: 100%; align-items: stretch; }
+    #sc-quiz-screen { width: 100%; align-items: stretch; justify-content: center; }
     .sc-progress-track {
       width: 100%;
       height: 6px;
@@ -159,7 +171,7 @@
     .sc-back-btn:disabled { visibility: hidden; }
 
     /* Results screen */
-    #sc-results-screen { text-align: center; }
+    #sc-results-screen { text-align: center; justify-content: center; width: 100%; }
     .sc-results-eyebrow {
       font-size: 13px;
       letter-spacing: 0.08em;
